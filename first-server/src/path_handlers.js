@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 
 const index_html = readFileSync("./sitrese/index.html");
+const favicon_ico =readFileSync("./sitrese/favicon.ico")
 
 const pathConfigs = [
   {
@@ -17,6 +18,13 @@ const pathConfigs = [
     handler: (req, res) => {
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end("hello world, a!\n");
+    },
+  },
+  {
+    path: "/favicon.ico",
+    handler: (req, res) => {
+      res.writeHead(200, { "Content-Type": "image/vnd.microsoft.icon" });
+      res.end(favicon_ico);
     },
   },
 ];
