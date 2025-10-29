@@ -1,4 +1,5 @@
 import express from "express";
+import morgan from "morgan";
 import flashcards from "./models/flashcards.js";
 
 const port = 8000;
@@ -7,6 +8,13 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded());
+app.use(morgan("dev"));
+
+function log_request(req, res, next) {
+  console.log(`Request ${req.method} ${req.path}`);
+  next();
+}
+app.use(log_request);
 
 app.get("/cards", (req, res) => {
   res.render("categories", {
@@ -27,18 +35,7 @@ app.get("/cards/:category_id", (req, res) => {
   }
 });
 
-app.post("/cards/:category_id/new", (req, res) => {
-  const category_id = req.params.category_id;
-  if (!flashcards.hasCategory(category_id)) {
-    res.sendStatus(404);
-  } else {
-    flashcards.addCard(category_id, {
-      front: req.body.front,
-      back: req.body.back,
-    });
-    res.redirect(`/cards/${category_id}`);
-  }
-});
+
 
 app.post("/cards/:category_id/new", (req, res) => {
   const category_id = req.params.category_id;
