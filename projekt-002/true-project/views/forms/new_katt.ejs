@@ -1,0 +1,19 @@
+<form action="/memsy/<%=category.id%>/new" method="POST">
+  <div>
+    <label for="kitty_ascii_art">meow</label>
+    <input
+      type="text"
+      name="ascii_art"
+      id="kitty_ascii_art"
+      required
+      minlength="1"
+      maxlength="500"
+      <% if (locals.ascii_art){ %>
+      value="<%= ascii_art %>"
+      <% }%>
+    />
+  </div>
+  <div>
+    <button>Dodaj</button>
+  </div>
+</form>

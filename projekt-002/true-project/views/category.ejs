@@ -1,0 +1,16 @@
+<%- include("head.partial.ejs") %>
+
+<main>
+  <h1><%= title %></h1>
+  <ul id="pics">
+    <% category.kitties.forEach(function(kitty){ %>
+    <li><%= kitty.ascii_art %></li>
+    <% }) %>
+  </ul>
+  <div>
+    <h3>Nowy kot</h3>
+    <%- include("forms/new_katt.ejs") %>
+  </div>
+</main>
+
+<%- include("foot.partial.ejs") %>
