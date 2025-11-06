@@ -16,14 +16,14 @@ function log_request(req, res, next) {
 }
 app.use(log_request);
 
-app.get("/memsy", (req, res) => {
+app.get("/kitties", (req, res) => {
   res.render("categories", {
     title: "Kategorie",
     categories: pics.getCategorySummaries(),
   });
 });
 
-app.get("/memsy/:category_id", (req, res) => {
+app.get("/kitties/:category_id", (req, res) => {
   const category = pics.getCategory(req.params.category_id);
   if (category != null) {
     res.render("category", {
@@ -37,7 +37,7 @@ app.get("/memsy/:category_id", (req, res) => {
 
 
 
-app.post("/memsy/:category_id/new", (req, res) => {
+app.post("/kitties/:category_id/new", (req, res) => {
   const category_id = req.params.category_id;
   if (!pics.hasCategory(category_id)) {
     res.sendStatus(404);
@@ -45,10 +45,10 @@ app.post("/memsy/:category_id/new", (req, res) => {
     let katt_data = {
       ascii_art: req.ascii_art
     };
-    var errors = pics.validateKattData(katt_data);
+    var errors = pics.validateKittyData(katt_data);
     if (errors.length == 0) {
       pics.addKitty(category_id, katt_data);
-      res.redirect(`/memesy/${category_id}`);
+      res.redirect(`/kitties/${category_id}`);
     } else {
       res.status(400);
       res.render("new_Katt", {

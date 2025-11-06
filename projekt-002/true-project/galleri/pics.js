@@ -72,7 +72,7 @@ export function hasCategory(categoryId) {
 export function getCategory(categoryId) {
   let category = db_ops.get_category_by_id.get(categoryId);
   if (category != null) {
-    category.katts = db_ops.get_kitty_by_category_id.all(category.category_id);
+    category.kitties = db_ops.get_kitty_by_category_id.all(category.category_id);
     return category;
   }
   return null;
