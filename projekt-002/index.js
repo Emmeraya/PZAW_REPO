@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import flashcards from "./models/flashcards.js";
+import pics from "./galleri/pics.js";
 
 const port = 8000;
 
@@ -16,15 +16,15 @@ function log_request(req, res, next) {
 }
 app.use(log_request);
 
-app.get("/cards", (req, res) => {
+app.get("/kitties", (req, res) => {
   res.render("categories", {
     title: "Kategorie",
-    categories: flashcards.getCategorySummaries(),
+    categories: pics.getCategorySummaries(),
   });
 });
 
-app.get("/cards/:category_id", (req, res) => {
-  const category = flashcards.getCategory(req.params.category_id);
+app.get("/kitties/:category_id", (req, res) => {
+  const category = pics.getCategory(req.params.category_id);
   if (category != null) {
     res.render("category", {
       title: category.name,
@@ -37,26 +37,24 @@ app.get("/cards/:category_id", (req, res) => {
 
 
 
-app.post("/cards/:category_id/new", (req, res) => {
+app.post("/kitties/:category_id/new", (req, res) => {
   const category_id = req.params.category_id;
-  if (!flashcards.hasCategory(category_id)) {
+  if (!pics.hasCategory(category_id)) {
     res.sendStatus(404);
   } else {
-    let card_data = {
-      front: req.body.front,
-      back: req.body.back,
+    let katt_data = {
+      ascii_art: req.body.ascii_art
     };
-    var errors = flashcards.validateCardData(card_data);
+    var errors = pics.validateKittyData(katt_data);
     if (errors.length == 0) {
-      flashcards.addCard(category_id, card_data);
-      res.redirect(`/cards/${category_id}`);
+      pics.addKitty(category_id, katt_data);
+      res.redirect(`/kitties/${category_id}`);
     } else {
       res.status(400);
-      res.render("new_card", {
+      res.render("new_katt", {
         errors,
-        title: "Nowa fiszka",
-        front: req.body.front,
-        back: req.body.back,
+        title: "Nowy kot",
+        ascii_art: req.ascii_art,
         category: {
           id: category_id,
         },
@@ -64,6 +62,9 @@ app.post("/cards/:category_id/new", (req, res) => {
     }
   }
 });
+
+
+
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

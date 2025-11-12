@@ -10,7 +10,7 @@ db.exec(
     id            TEXT UNIQUE NOT NULL,
     name          TEXT NOT NULL
   ) STRICT;
-  CREATE TABLE IF NOT EXISTS pc_kittys (
+  CREATE TABLE IF NOT EXISTS pc_kitties (
     id            INTEGER PRIMARY KEY,
     category_id   INTEGER NOT NULL REFERENCES pc_categs(category_id) ON DELETE NO ACTION,
     ascii_art         TEXT NOT NULL
@@ -23,11 +23,11 @@ const db_ops = {
         VALUES (?, ?) RETURNING category_id, id, name;`
   ),
   insert_kitty: db.prepare(
-    `INSERT INTO pc_kittys (category_id, ascii_art) 
+    `INSERT INTO pc_kitties (category_id, ascii_art) 
         VALUES (?, ?) RETURNING id, ascii_art;`
   ),
   insert_kitty_by_id: db.prepare(
-    `INSERT INTO pc_kittys (category_id, ascii_art) VALUES (
+    `INSERT INTO pc_kitties (category_id, ascii_art) VALUES (
       (SELECT category_id FROM pc_categs WHERE id = ?),
       ?
     ) 
@@ -38,10 +38,9 @@ const db_ops = {
     "SELECT category_id, id, name FROM pc_categs WHERE id = ?;"
   ),
   get_kitty_by_category_id: db.prepare(
-    "SELECT id, ascii_art FROM pc_kittys WHERE category_id = ?;"
+    "SELECT id, ascii_art FROM pc_kitties WHERE category_id = ?;"
   ),
 };
-
 
 
 if (process.env.POPULATE_DB) {
@@ -49,7 +48,7 @@ if (process.env.POPULATE_DB) {
   Object.entries(art_categories).map(([id, data]) => {
     let category = db_ops.insert_category.get(id, data.name);
     console.log("Created category:", category);
-    for (let kitty of data.kittys) {
+    for (let kitty of data.kitties) {
       let c = db_ops.insert_kitty.get(
         category.category_id,
         kitty.ascii_art

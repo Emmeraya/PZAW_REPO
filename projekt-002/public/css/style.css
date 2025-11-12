@@ -16,9 +16,17 @@ body {
 main {
     color: azure;
     background-color:rgba(233, 33, 252, 0.493);
-    width: 70rem;
+    width: 80rem;
     padding: 1rem;
     border-radius: 0.5rem;
+    font-family: monospace;
+
+}
+
+ul#category li {
+    white-space: pre;
+    text-wrap-mode: nowrap;
+    white-space-collapse: preserve;
 }
 a:link {
   color: rgb(234, 0, 255);
