@@ -40,6 +40,9 @@ const db_ops = {
   get_category_by_id: db.prepare(
     "SELECT category_id, id, name FROM pc_categs WHERE id = ?;"
   ),
+  get_kitty_by_id: db.prepare(
+    "SELECT id, ascii_art FROM pc_kitties WHERE id = ?;"
+  ),
   get_kitty_by_category_id: db.prepare(
     "SELECT id, ascii_art FROM pc_kitties WHERE category_id = ?;"
   ),

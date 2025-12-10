@@ -82,7 +82,7 @@ app.post("/kitties/new_category", (req, res) => {
 
   if (errors.length == 0) {
     pics.addCategory(category_id, category_name);
-    res.redirect(`/kitties/view/${category_id}`);
+    res.redirect(`/kitties/${category_id}`);
   } else {
     res.status(400);
     res.render("category_new", {
@@ -130,7 +130,7 @@ app.post("/kitties/edit/:category_id", (req, res) => {
         category_name
       );
       if (category != null) {
-        res.redirect("/kitties/view/" + category.id);
+        res.redirect("/kitties/" + category.id);
       } else {
         res.write("Unexpected error while updating category");
         res.sendStatus(500);
