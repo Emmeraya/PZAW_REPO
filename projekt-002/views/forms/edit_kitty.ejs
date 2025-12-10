@@ -1,0 +1,4 @@
+<form class="pics-action" action="/kitties/edit/<%= category.id %>/<%= kitty.id %>" method="POST">
+    <input type="text" name="ascii_art" id="pics-<%= kitty.id %>-ascii_art" value="<%= kitty.ascii_art %>" required minlength="1" maxlength="500"> 
+    <button>Zapisz</button>
+</form>
