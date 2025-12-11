@@ -51,7 +51,7 @@ app.post("/kitties/add_kitty/:category_id", (req, res) => {
       res.redirect(`/kitties/${category_id}`);
     } else {
       res.status(400);
-      res.render("new_katt", {
+      res.render("new_kitty", {
         errors,
         title: "Nowy kot",
         ascii_art: req.ascii_art,
