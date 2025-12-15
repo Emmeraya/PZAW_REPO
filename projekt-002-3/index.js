@@ -63,13 +63,14 @@ app.post("/kitties/add_kitty/:category_id", (req, res) => {
   }
 });
 
-app.get("/kitties/new_category", (req, res) => {
+
+app.get("/new_category", (req, res) => {
   res.render("category_new", {
     title: "Nowa kategoria",
   });
 });
 
-app.post("/kitties/new_category", (req, res) => {
+app.post("/new_category", (req, res) => {
   const category_name = req.body.name;
   var category_id = null;
   var errors = pics.validateCategoryName(category_name);
