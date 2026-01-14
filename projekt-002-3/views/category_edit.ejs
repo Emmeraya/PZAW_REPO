@@ -15,7 +15,7 @@
         <% category.kitties.forEach(function(kitty){ %>
         <li>
           <%- include("forms/edit_kitty.ejs", {kitty, category}) %>
-          <form class="pics-action" action="/kitties/delete/<%= category.id %>/<%= kitty.id %>" method="POST">
+          <form class="pics-action" action="/delete/<%= category.id %>/<%= kitty.id %>" method="POST">
             <button>Usuń</button>
           </form>
         </li>
@@ -25,7 +25,7 @@
       <p>W tej kategorii nie ma żadnych fiszek. Dodaj nowe poniżej.</p>
     <% } %>
   </div>
-  <a href="/kitties/<%= category.id %>">Powrót</a>
+  <a href="/view/<%= category.id %>">Powrót</a>
 </main>
 
 <%- include("foot.partial.ejs") %>

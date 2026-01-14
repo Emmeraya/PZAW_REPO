@@ -14,16 +14,19 @@ app.use(express.urlencoded());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-const settingsRouter = express.Router();
-settingsRouter.use("/toggle-theme", settings.themeToggle);
-app.use("/settings", settingsRouter);
-
 function settingsLocals(req, res, next) {
   res.locals.app = settings.getSettings(req);
   res.locals.page = req.path;
   next();
 }
 app.use(settingsLocals);
+
+const settingsRouter = express.Router();
+settingsRouter.use("/toggle-theme", settings.themeToggle);
+settingsRouter.use("/accept-cookies", settings.acceptCookies);
+settingsRouter.use("/decline-cookies", settings.declineCookies);
+settingsRouter.use("/manage-cookies", settings.manageCookies);
+app.use("/settings", settingsRouter);
 
 function log_request(req, res, next) {
   console.log(`Request ${req.method} ${req.path}`);
@@ -47,7 +50,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/kitties/:category_id", (req, res) => {
+app.get("/view/:category_id", (req, res) => {
   const category = pics.getCategory(req.params.category_id);
   if (category != null) {
      if (res.locals.app.cookie_consent) {
@@ -72,7 +75,7 @@ app.get("/kitties/:category_id", (req, res) => {
 
 
 
-app.post("/kitties/add_kitty/:category_id", (req, res) => {
+app.post("/add_kitty/:category_id", (req, res) => {
   const category_id = req.params.category_id;
   if (!pics.hasCategory(category_id)) {
     res.sendStatus(404);
@@ -83,7 +86,7 @@ app.post("/kitties/add_kitty/:category_id", (req, res) => {
     var errors = pics.validateKittyData(katt_data);
     if (errors.length == 0) {
       pics.addKitty(category_id, katt_data);
-      res.redirect(`/kitties/${category_id}`);
+      res.redirect(`/view/${category_id}`);
     } else {
       res.status(400);
       res.render("new_kitty", {
@@ -129,7 +132,7 @@ app.post("/new_category", (req, res) => {
   }
 });
 
-app.get("/kitties/edit/:category_id", (req, res) => {
+app.get("/edit/:category_id", (req, res) => {
   const category_id = req.params.category_id;
   const errors = [];
   var category = pics.getCategory(category_id);
@@ -144,7 +147,7 @@ app.get("/kitties/edit/:category_id", (req, res) => {
   }
 });
 
-app.post("/kitties/edit/:category_id", (req, res) => {
+app.post("/edit/:category_id", (req, res) => {
   const category_id = req.params.category_id;
   if (pics.hasCategory(category_id)) {
     const category_name = req.body.name;
@@ -166,7 +169,7 @@ app.post("/kitties/edit/:category_id", (req, res) => {
         category_name
       );
       if (category != null) {
-        res.redirect("/kitties/" + category.id);
+        res.redirect("/view/" + category.id);
       } else {
         res.write("Unexpected error while updating category");
         res.sendStatus(500);
@@ -184,7 +187,7 @@ app.post("/kitties/edit/:category_id", (req, res) => {
   }
 });
 
-app.post("/kitties/edit/:category_id/:kitty_id", (req, res) => {
+app.post("/edit/:category_id/:kitty_id", (req, res) => {
   const category_id = req.params.category_id;
   const kitty_id = req.params.kitty_id;
   if (!pics.hasCategory(category_id) || !pics.hasKitty(kitty_id)) {
@@ -197,7 +200,7 @@ app.post("/kitties/edit/:category_id/:kitty_id", (req, res) => {
     const errors = pics.validateKittyData(kitty);
     if (errors.length == 0) {
       pics.updateKitty(kitty);
-      res.redirect(`/kitties/edit/${category_id}`);
+      res.redirect(`/edit/${category_id}`);
     } else {
       let category = pics.getCategory(category_id);
       res.render("category_edit", {
@@ -209,14 +212,14 @@ app.post("/kitties/edit/:category_id/:kitty_id", (req, res) => {
   }
 });
 
-app.post("/kitties/delete/:category_id/:kitty_id", (req, res) => {
+app.post("/delete/:category_id/:kitty_id", (req, res) => {
   const category_id = req.params.category_id;
   const kitty_id = req.params.kitty_id;
   if (!pics.hasCategory(category_id) || !pics.hasKitty(kitty_id)) {
     res.sendStatus(404);
   } else {
     pics.deleteKittyById(kitty_id);
-    res.redirect(`/kitties/edit/${category_id}`);
+    res.redirect(`/edit/${category_id}`);
   }
 });
 

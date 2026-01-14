@@ -2,14 +2,14 @@
 
   <h1><%= title %></h1>
   <ul id="category">
-    <a href="/kitties/edit/<%= category.id %>" class="action-link">Edytuj katergorię</a>
+    <a href="/edit/<%= category.id %>" class="action-link">Edytuj katergorię</a>
   <% if (category.kitties && category.kitties.length > 0) { %>
     <% category.kitties.forEach(function(kitty){ %>
     <li><%= kitty.ascii_art %></li>
     <% }) %>
   </ul>
   <% } else { %>
-    <p>W tej kategorii nie ma żadnych fiszek. Dodaj nowe poniżej.</p>
+    <p>W tej kategorii nie ma żadnych kotów. Dodaj nowe poniżej.</p>
   <% } %>
   <div>
     <h3>Nowy kot</h3>
