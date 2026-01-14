@@ -1,7 +1,15 @@
 <%- include("head.partial.ejs") %>
 
-<main>
   <h1><%= title %></h1>
+   <% if (last_viewed_categories?.length > 0) { %>
+  <h2>Ostatnio przeglądane</h2>
+  <ul id="recently_viewed">
+    <% last_viewed_categories.forEach(function(category){ %>
+    <li><a href="/kitties/<%= category.id %>"><%= category.name %></a></li>
+    <% }) %>
+  </ul>
+  <h2>Wszystkie</h2>
+  <% } /* (last_viewed_categories.length > 0) */ %>
   <ul id="categories">
     <% categories.forEach(function(category){ %>
     <li><a href="/kitties/<%= category.id %>"><%= category.name %></a></li>

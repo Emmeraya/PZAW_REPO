@@ -1,6 +1,9 @@
 import express from "express";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
+
 import pics from "./galleri/pics.js";
+import settings from "./galleri/settings.js";
 
 const port = 8000;
 
@@ -9,6 +12,18 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded());
 app.use(morgan("dev"));
+app.use(cookieParser());
+
+const settingsRouter = express.Router();
+settingsRouter.use("/toggle-theme", settings.themeToggle);
+app.use("/settings", settingsRouter);
+
+function settingsLocals(req, res, next) {
+  res.locals.app = settings.getSettings(req);
+  res.locals.page = req.path;
+  next();
+}
+app.use(settingsLocals);
 
 function log_request(req, res, next) {
   console.log(`Request ${req.method} ${req.path}`);
@@ -16,16 +31,36 @@ function log_request(req, res, next) {
 }
 app.use(log_request);
 
-app.get("/kitties", (req, res) => {
+app.get("/", (req, res) => {
+  var last_viewed_categories = null;
+  if (res.locals.app.cookie_consent && req.cookies[LAST_VIEWED_COOKIE]) {
+    let last_viewed = req.cookies[LAST_VIEWED_COOKIE]?.split(",") || [];
+    last_viewed_categories = last_viewed
+      .map((x) => parseInt(x, 10))
+      .filter((x) => !isNaN(x))
+      .map((id) => pics.getCategorySummary(id));
+  }
   res.render("categories", {
     title: "Kategorie",
     categories: pics.getCategorySummaries(),
+    last_viewed_categories,
   });
 });
 
 app.get("/kitties/:category_id", (req, res) => {
   const category = pics.getCategory(req.params.category_id);
   if (category != null) {
+     if (res.locals.app.cookie_consent) {
+      let last_viewed_dirty = req.cookies[LAST_VIEWED_COOKIE]?.split(",") || [];
+      let last_viewed = [
+        category.category_id,
+        ...last_viewed_dirty
+          .map((x) => parseInt(x, 10))
+          .filter((x) => !isNaN(x) && x !== category.category_id)
+          .slice(0, 2),
+      ];
+      res.cookie(LAST_VIEWED_COOKIE, last_viewed.join(","));
+    }
     res.render("category", {
       title: category.name,
       category,
@@ -83,7 +118,7 @@ app.post("/new_category", (req, res) => {
 
   if (errors.length == 0) {
     pics.addCategory(category_id, category_name);
-    res.redirect(`/kitties/${category_id}`);
+    res.redirect(`/${category_id}`);
   } else {
     res.status(400);
     res.render("category_new", {
