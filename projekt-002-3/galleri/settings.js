@@ -1,6 +1,7 @@
 "use strict";
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
+const ONE_MONTH = 30 * ONE_DAY;
 const THEME_COOKIE = "kit-theme";
 const CONSENT_COOKIE = "kit-consent";
 
@@ -18,15 +19,14 @@ export function themeToggle(req, res) {
 }
 
 export function acceptCookies(req, res) {
-  
-  res.cookie(CONSENT_COOKIE, true);
+  res.cookie(CONSENT_COOKIE, true, { maxAge: ONE_MONTH });
 
   var next = req.query.next || "/";
   res.redirect(next);
 }
 
 export function declineCookies(req, res) {
-  res.cookie(CONSENT_COOKIE, false);
+  res.cookie(CONSENT_COOKIE, false, { maxAge: ONE_MONTH });
 
   var next = req.query.next || "/";
   res.redirect(next);
@@ -50,10 +50,23 @@ export function getSettings(req) {
   return settings;
 }
 
+function settingsHandler(req, res, next) {
+  res.locals.app = getSettings(req);
+  res.locals.page = req.path;
+
+  if (res.locals.app.cookie_consent != null) {
+    res.cookie(CONSENT_COOKIE, res.locals.app.cookie_consent, {
+      maxAge: ONE_MONTH,
+    });
+  }
+  next();
+}
+
 export default {
   themeToggle,
   acceptCookies,
   declineCookies,
   manageCookies,
   getSettings,
+  settingsHandler,
 };

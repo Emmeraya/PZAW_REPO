@@ -14,6 +14,8 @@ app.use(express.urlencoded());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
+app.use(settings.settingsHandler);
+
 function settingsLocals(req, res, next) {
   res.locals.app = settings.getSettings(req);
   res.locals.page = req.path;
