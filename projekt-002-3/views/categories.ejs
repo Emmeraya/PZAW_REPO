@@ -5,7 +5,7 @@
   <h2>Ostatnio przeglądane</h2>
   <ul id="recently_viewed">
     <% last_viewed_categories.forEach(function(category){ %>
-    <li><a href="/kview/<%= category.id %>"><%= category.name %></a></li>
+    <li><a href="/view/<%= category.id %>"><%= category.name %></a></li>
     <% }) %>
   </ul>
   <h2>Wszystkie</h2>

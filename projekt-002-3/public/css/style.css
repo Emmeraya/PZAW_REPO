@@ -6,7 +6,27 @@ html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 11pt;
 
+    --banner-background: rgb(180, 192, 230);
+    --button-background: rgb(201, 170, 221);
+    --text-color-normal: rgb(1, 44, 44);
+    --text-color-link: rgb(128, 0, 139);
+    --link-visited: rgb(23, 21, 117);
+    --link-hover:rgb(138, 115, 0);
+    --link-active: rgb(0, 114, 143);
+    --backdrop: rgba(249, 197, 255, 0.493);
+    --background: rgba(199, 142, 221, 0.493);
     
+}
+html[data-theme='dark']{
+    --banner-background: rgb(122, 17, 131);
+    --button-background: rgb(74, 18, 112);
+    --text-color-normal: azure;
+    --text-color-link: rgb(234, 0, 255);
+    --link-visited: rgb(145, 143, 253);
+    --link-hover:rgb(255, 213, 0);
+    --link-active: rgb(0, 204, 255);
+    --backdrop: rgba(233, 33, 252, 0.493);
+    --background: rgb(119, 23, 148);
 }
 
 body {
@@ -16,9 +36,7 @@ body {
 }
 
 main {
-    --text-color-normal: rgb(1, 44, 44);
-    --text-color-link: rgb(128, 0, 139);
-    --backdrop: rgba(249, 197, 255, 0.493);
+    
 
     width: 80rem;
     padding: 1rem;
@@ -28,19 +46,7 @@ main {
     background-color: var(--backdrop);
     color: var(--text-color-normal);
 }
-main[data-theme='dark']{
-    --text-color-normal: azure;
-    --text-color-link: rgb(234, 0, 255);
-    --backdrop: rgba(233, 33, 252, 0.493);
 
-    width: 80rem;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-family: monospace;
-
-    background-color: var(--backdrop);
-    color: var(--text-color-normal);
-}
 
 .action-link {
     font-size: 0.8rem;
@@ -56,40 +62,135 @@ ul#category li {
     white-space-collapse: preserve;
 }
 a:link {
-  color: rgb(234, 0, 255);
+  color: var(--text-color-link);
   background-color: transparent;
   text-decoration: none;
 }
 
 a:visited {
-  color: rgb(23, 21, 117);
-  background-color: transparent;
-  text-decoration: none;
-}
-a:visited[data-theme='dark'] {
-  color: rgb(145, 143, 253);
+  color: var(--link-visited);
   background-color: transparent;
   text-decoration: none;
 }
 
 a:hover {
-  color: rgb(138, 115, 0);
+  color: var(--link-hover);
   background-color: transparent;
   text-decoration: underline;
 }
 
-a:hover[data-theme='dark'] {
-  color: rgb(255, 213, 0);
-  background-color: transparent;
-  text-decoration: underline;
-}
 a:active {
-  color: rgb(0, 114, 143);
+  color: var(--link-active);
   background-color: transparent;
   text-decoration: underline;
 }
-a:active[data-theme='dark'] {
-  color: rgb(0, 204, 255);
-  background-color: transparent;
-  text-decoration: underline;
+
+.cookie-container {
+  
+  position: fixed;
+  bottom: 20px; 
+  right: 20px; 
+  
+  width: 400px; 
+  padding: 25px;
+
+  background-color: var(--banner-background);
+  border: 1px solid var(--backdrop); 
+  border-radius: 0.5rem;
+  font-family: "Roboto Mono", "Courier New", monospace; 
+  font-size: 0.9rem;
+  letter-spacing: 0.04rem;
+  
+  text-transform: uppercase; 
+  
+  box-sizing: border-box;
+}
+.custom-break {
+  display: block;
+  height: 10px;
+  margin: 15px 0; 
+}
+
+#buttonContainer {
+  display: flex;
+  justify-content: space-between; 
+  
+  gap: 15px; 
+  
+  margin-top: 15px; 
+}
+
+#buttonContainer a {
+  text-align: center;
+}
+
+.cookieButton {
+  background-color: var(--background);
+  border: 1px solid var(--backdrop);
+  border-radius: 0.5rem;
+  padding: 10px 20px; 
+  
+  cursor: pointer; 
+  width: 125px; 
+}
+a.cookieButton {
+  color: var(--text-color-normal);
+  text-align: center;
+  text-decoration: none;
+
+  font-family: "Roboto Mono", "Courier New", monospace;
+  font-size: 0.9rem; 
+  text-transform: uppercase; 
+  letter-spacing: 0.04rem; 
+}
+
+.cookieButton:hover {
+  background-color: var(--button-background); 
+}
+
+@media (max-width: 600px) {
+  .cookie-container {
+    width: 90%;
+    bottom: 10px; 
+    left: 5%;
+    padding: 15px; 
+    font-size: 0.8rem; 
+  }
+
+  .cookieButton {
+    padding: 8px 15px;
+  }
+
+  #acceptButton, #declineButton {
+    width: 80%; 
+  }
+
+  #buttonContainer {
+    flex-direction: column; 
+    gap: 10px;
+    align-items: center;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .cookie-container {
+    width: 70%; 
+    bottom: 15px;
+    left: 15%; 
+    padding: 12px;
+    font-size: 12px; 
+  }
+
+  .cookieButton {
+    padding: 9px 18px; 
+  }
+
+  #acceptButton, #declineButton {
+    width: 45%;
+  }
+
+
+  #buttonContainer {
+    gap: 12px;
+  }
 }

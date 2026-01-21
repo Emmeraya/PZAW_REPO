@@ -5,6 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "node --watch --env-file .env ./index.js",
+    "populate_db": "node utils/populate_db.js",
+    "generate_env": "./utils/generate_env.sh > .env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,2 +1,23 @@
+ <footer>
+   <% if (app.cookie_consent == null) { %>
+   <div id="cookie-container" class="cookie-container">
+  
+  <p>Szanujemy Twoją prywatność i autonomię. Nasza strona korzysta z cookies w celu poprawy Twojego doświadczenia wyłącznie za Twoją zgodą.</p>
+
+  <p>Ty decydujesz, jak możemy korzystać z zasobów Twojego urządzenia.</p>
+
+  <p>Nasza <a href="/privacy-policy" target="_blank">Polityka prywatności</a> i <a href="/cookie-policy" target="_blank">Polityka Cookies</a> są dostępne do wglądu.</p>
+
+  <span class="custom-break"></span> 
+  
+  <div id="buttonContainer" class="cookie-buttons">
+    <a href="/settings/accept-cookies" id="acceptButton" class="cookieButton">Zaakceptuj</a>
+    <a href="/settings/decline-cookies" id="declineButton" class="cookieButton">Odrzuć</a>
+    <a href="/settings/manage-cookies" id="manage-cookies">Zarządzaj cookies</a>
+  </div>
+</div> 
+   <% } /* (app.cookie_consent == null) */ %>
+  </footer>
+  </div>
   </body>
 </html>

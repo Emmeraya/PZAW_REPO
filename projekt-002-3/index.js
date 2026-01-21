@@ -5,14 +5,25 @@ import cookieParser from "cookie-parser";
 import pics from "./galleri/pics.js";
 import settings from "./galleri/settings.js";
 
-const port = 8000;
+const port = process.env.PORT || 8000;
+const LAST_VIEWED_COOKIE = "__Host-kat-last-viewed";
+const ONE_DAY = 24 * 60 * 60 * 1000;
+const ONE_MONTH = 30 * ONE_DAY;
+const SECRET = process.env.SECRET;
+
+if (SECRET == null) {
+  console.error(
+    "SECRET environment variable missing. Please create an env file or provide SECRET via environment variables."
+  );
+  process.exit(1);
+}
 
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded());
 app.use(morgan("dev"));
-app.use(cookieParser());
+app.use(cookieParser(SECRET));
 
 app.use(settings.settingsHandler);
 
@@ -38,8 +49,8 @@ app.use(log_request);
 
 app.get("/", (req, res) => {
   var last_viewed_categories = null;
-  if (res.locals.app.cookie_consent && req.cookies[LAST_VIEWED_COOKIE]) {
-    let last_viewed = req.cookies[LAST_VIEWED_COOKIE]?.split(",") || [];
+  if (res.locals.app.cookie_consent && req.signedCookies[LAST_VIEWED_COOKIE]) {
+    let last_viewed = req.signedCookies[LAST_VIEWED_COOKIE] || [];
     last_viewed_categories = last_viewed
       .map((x) => parseInt(x, 10))
       .filter((x) => !isNaN(x))
@@ -56,7 +67,7 @@ app.get("/view/:category_id", (req, res) => {
   const category = pics.getCategory(req.params.category_id);
   if (category != null) {
      if (res.locals.app.cookie_consent) {
-      let last_viewed_dirty = req.cookies[LAST_VIEWED_COOKIE]?.split(",") || [];
+      let last_viewed_dirty = req.signedCookies[LAST_VIEWED_COOKIE] || [];
       let last_viewed = [
         category.category_id,
         ...last_viewed_dirty
@@ -64,7 +75,12 @@ app.get("/view/:category_id", (req, res) => {
           .filter((x) => !isNaN(x) && x !== category.category_id)
           .slice(0, 2),
       ];
-      res.cookie(LAST_VIEWED_COOKIE, last_viewed.join(","));
+      res.cookie(LAST_VIEWED_COOKIE, last_viewed, {
+        httpOnly: true,
+        secure: true,
+        maxAge: ONE_MONTH,
+        signed: true,
+      });
     }
     res.render("category", {
       title: category.name,
