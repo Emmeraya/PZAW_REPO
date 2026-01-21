@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 
 import pics from "./galleri/pics.js";
 import settings from "./galleri/settings.js";
+import session from "./galleri/session.js";
+import auth from "./controllers/auth.js";
 
 const port = process.env.PORT || 8000;
 const LAST_VIEWED_COOKIE = "__Host-kat-last-viewed";
@@ -33,6 +35,7 @@ function settingsLocals(req, res, next) {
   next();
 }
 app.use(settingsLocals);
+app.use(session.sessionHandler);
 
 const settingsRouter = express.Router();
 settingsRouter.use("/toggle-theme", settings.themeToggle);
@@ -41,6 +44,13 @@ settingsRouter.use("/decline-cookies", settings.declineCookies);
 settingsRouter.use("/manage-cookies", settings.manageCookies);
 app.use("/settings", settingsRouter);
 
+const authRouter = express.Router();
+authRouter.get("/signup", auth.signup_get);
+authRouter.post("/signup", auth.signup_post);
+authRouter.get("/login", auth.login_get);
+authRouter.post("/login", auth.login_post);
+authRouter.get("/logout", auth.logout);
+app.use("/auth", authRouter);
 function log_request(req, res, next) {
   console.log(`Request ${req.method} ${req.path}`);
   next();
