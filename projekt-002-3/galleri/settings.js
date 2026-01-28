@@ -4,6 +4,7 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 const ONE_MONTH = 30 * ONE_DAY;
 const THEME_COOKIE = "kit-theme";
 const CONSENT_COOKIE = "kit-consent";
+const CONSENT_PARAMS = { maxAge: ONE_MONTH, secure: true, httpOnly: true };
 
 export function themeToggle(req, res) {
   var theme = req.cookies[THEME_COOKIE];
@@ -12,21 +13,21 @@ export function themeToggle(req, res) {
   } else {
     theme = "dark";
   }
-  res.cookie(THEME_COOKIE, theme);
+  res.cookie(THEME_COOKIE, them, { maxAge: ONE_MONTH, secure: true });
 
   var next = req.query.next || "/";
   res.redirect(next);
 }
 
 export function acceptCookies(req, res) {
-  res.cookie(CONSENT_COOKIE, true, { maxAge: ONE_MONTH });
+  res.cookie(CONSENT_COOKIE, true, CONSENT_PARAMS);
 
   var next = req.query.next || "/";
   res.redirect(next);
 }
 
 export function declineCookies(req, res) {
-  res.cookie(CONSENT_COOKIE, false, { maxAge: ONE_MONTH });
+  res.cookie(CONSENT_COOKIE, false, CONSENT_PARAMS);
 
   var next = req.query.next || "/";
   res.redirect(next);
@@ -55,9 +56,7 @@ function settingsHandler(req, res, next) {
   res.locals.page = req.path;
 
   if (res.locals.app.cookie_consent != null) {
-    res.cookie(CONSENT_COOKIE, res.locals.app.cookie_consent, {
-      maxAge: ONE_MONTH,
-    });
+    res.cookie(CONSENT_COOKIE, res.locals.app.cookie_consent, CONSENT_PARAMS);
   }
   next();
 }

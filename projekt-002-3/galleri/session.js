@@ -25,6 +25,9 @@ const db_ops = {
   get_session: db.prepare(
     "SELECT id, user_id, created_at from pc_session WHERE id = ?;"
   ),
+  delete_session: db.prepare(
+    `DELETE FROM pc_session WHERE id=?;`
+  ),
 };
 
 export function createSession(user, res) {
@@ -40,6 +43,17 @@ export function createSession(user, res) {
     secure: true,
   });
   return session;
+}
+
+export function deleteSession(res) {
+  let sessionId = res.locals.session.id;
+  db_ops.delete_session.run(sessionId);
+
+  res.cookie(SESSION_COOKIE, sessionId.toString(), {
+    maxAge: 0,
+    httpOnly: true,
+    secure: true,
+  });
 }
 
 export function sessionHandler(req, res, next) {
@@ -87,5 +101,6 @@ export function sessionHandler(req, res, next) {
 
 export default {
   createSession,
+  deleteSession,
   sessionHandler,
 };

@@ -51,6 +51,7 @@ authRouter.get("/login", auth.login_get);
 authRouter.post("/login", auth.login_post);
 authRouter.get("/logout", auth.logout);
 app.use("/auth", authRouter);
+
 function log_request(req, res, next) {
   console.log(`Request ${req.method} ${req.path}`);
   next();
